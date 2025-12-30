@@ -1,6 +1,7 @@
 package com.example.crudDemo.service;
 
 import com.example.crudDemo.entity.Student;
+import com.example.crudDemo.exception.StudentNotFoundException;
 import com.example.crudDemo.repository.StudentRepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,24 +27,25 @@ public class StudentServiceImplement implements StudentService {
 
     @Override
     public Student getStudentById(Long id){
-        return repo.findById(id).orElse(null);
+        return repo.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
     }
 
     @Override
     public Student updateStudent(Long id, Student student){
-        Student existing = repo.findById(id).orElse(null);
+        Student existing = repo.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
 
-        if(existing != null){
+
             existing.setName(student.getName());
             existing.setEmail(student.getEmail());
             existing.setAge(student.getAge());
             return repo.save(existing);
-        }
-        return null;
+
     }
 
     @Override
-    public void deleteStudent(Long id){
+    public void deleteStudent(Long id) {
+        Student existing = repo.findById(id)
+                        .orElseThrow(() -> new StudentNotFoundException(id));
         repo.deleteById(id);
     }
 }
