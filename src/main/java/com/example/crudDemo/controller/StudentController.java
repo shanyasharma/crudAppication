@@ -1,21 +1,25 @@
 package com.example.crudDemo.controller;
 
 import com.example.crudDemo.entity.Student;
-import com.example.crudDemo.repository.StudentRepo;
 import com.example.crudDemo.service.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/students")
 public class StudentController {
 
     @Autowired
     private StudentService service;
 
     @PostMapping
-    public Student addStudent(@RequestBody Student student){return service.addStudent(student);}
+    public ResponseEntity<Student> addStudent(@Valid @RequestBody Student student){
+        return new ResponseEntity<>(service.addStudent(student), HttpStatus.CREATED);}
 
     @GetMapping
     public List<Student> getAllStudents(){return service.getAllStudents();}
@@ -26,8 +30,8 @@ public class StudentController {
 
     //Update
     @PutMapping("/{id}")
-    public Student updateStudent(@PathVariable Long id, @RequestBody Student student){
-        return service.updateStudent(id, student);
+    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @Valid @RequestBody Student student){
+        return ResponseEntity.ok(service.updateStudent(id, student));
     }
 
     //Delete
