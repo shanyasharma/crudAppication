@@ -1,5 +1,7 @@
 package com.example.crudDemo.controller;
 
+import com.example.crudDemo.dto.StudentRequestDTO;
+import com.example.crudDemo.dto.StudentResponseDTO;
 import com.example.crudDemo.entity.Student;
 import com.example.crudDemo.service.StudentService;
 import jakarta.validation.Valid;
@@ -18,20 +20,25 @@ public class StudentController {
     private StudentService service;
 
     @PostMapping
-    public ResponseEntity<Student> addStudent(@Valid @RequestBody Student student){
-        return new ResponseEntity<>(service.addStudent(student), HttpStatus.CREATED);}
+    public ResponseEntity<StudentResponseDTO> addStudent(@Valid @RequestBody StudentRequestDTO dto){
+        return new ResponseEntity<>(service.addStudent(dto), HttpStatus.CREATED);}
 
     @GetMapping
-    public List<Student> getAllStudents(){return service.getAllStudents();}
+    public List<StudentResponseDTO> getAllStudents(){
+        return service.getAllStudents();
+    }
 
     //Read by ID
     @GetMapping("/{id}")
-    public Student getStudentById(@PathVariable Long id){return service.getStudentById(id);}
+    public StudentResponseDTO getStudentById(@PathVariable Long id){
+        return service.getStudentById(id);}
 
     //Update
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @Valid @RequestBody Student student){
-        return ResponseEntity.ok(service.updateStudent(id, student));
+    public StudentResponseDTO updateStudent(
+            @PathVariable Long id,
+            @Valid @RequestBody StudentRequestDTO dto){
+        return service.updateStudent(id, dto);
     }
 
     //Delete
