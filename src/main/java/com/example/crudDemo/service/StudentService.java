@@ -1,16 +1,18 @@
 package com.example.crudDemo.service;
 
+import com.example.crudDemo.dto.StudentRequestDTO;
+import com.example.crudDemo.dto.StudentResponseDTO;
 import com.example.crudDemo.entity.Student;
 
 import java.util.List;
 
 public interface StudentService {
-    Student addStudent(Student student);
-    List<Student> getAllStudents();
+    StudentResponseDTO addStudent(StudentRequestDTO dto);
+    List<StudentResponseDTO> getAllStudents();
 
-    Student getStudentById(Long id);
+    StudentResponseDTO getStudentById(Long id);
 
-    Student updateStudent(Long id, Student student);
+    StudentResponseDTO updateStudent(Long id, StudentRequestDTO dto);
     void deleteStudent(Long id);
 
 }
