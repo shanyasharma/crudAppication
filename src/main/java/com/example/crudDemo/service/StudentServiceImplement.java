@@ -6,11 +6,14 @@ import com.example.crudDemo.entity.Student;
 import com.example.crudDemo.exception.StudentNotFoundException;
 import com.example.crudDemo.repository.StudentRepo;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
+@Slf4j
 @Service
 public class StudentServiceImplement implements StudentService {
 
@@ -38,13 +41,16 @@ public class StudentServiceImplement implements StudentService {
     @Override
     public StudentResponseDTO addStudent(StudentRequestDTO dto)
     {
+        log.info("Adding new student with email: {}", dto.getEmail());
         Student saved = repo.save(mapToEntity(dto));
+        log.info("Student saved succesfully with id: {}", saved.getId());
         return mapToResponse(saved);
     }
 
     @Override
     public List<StudentResponseDTO> getAllStudents()
     {
+        log.info("Fetch all students");
         return repo.findAll()
                 .stream()
                 .map(this::mapToResponse)
@@ -53,6 +59,7 @@ public class StudentServiceImplement implements StudentService {
 
     @Override
     public StudentResponseDTO getStudentById(Long id){
+        log.info("Fetch student with id: {}", id);
         Student student = repo.findById(id)
                 .orElseThrow(() -> new StudentNotFoundException(id));
         return mapToResponse(student);
@@ -72,7 +79,9 @@ public class StudentServiceImplement implements StudentService {
     }
 
     @Override
-    public void deleteStudent(Long id) {
+    public void deleteStudent(Long id)
+    {
+        log.warn("Deleting student with id: {}", id);
         repo.deleteById(id);
     }
 }
