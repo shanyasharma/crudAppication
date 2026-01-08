@@ -2,7 +2,8 @@ package com.example.crudDemo.service;
 
 import com.example.crudDemo.dto.StudentRequestDTO;
 import com.example.crudDemo.dto.StudentResponseDTO;
-import com.example.crudDemo.entity.Student;
+import org.springframework.data.domain.Page;
+
 
 import java.util.List;
 
@@ -14,5 +15,12 @@ public interface StudentService {
 
     StudentResponseDTO updateStudent(Long id, StudentRequestDTO dto);
     void deleteStudent(Long id);
+
+    Page<StudentResponseDTO> getStudentsWithPagination(
+            int page,
+            int size,
+            String sortBy,
+            String direction
+    );
 
 }

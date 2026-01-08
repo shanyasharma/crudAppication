@@ -8,6 +8,8 @@ import com.example.crudDemo.repository.StudentRepo;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,8 @@ import java.util.List;
 @Slf4j
 @Service
 public class StudentServiceImplement implements StudentService {
+
+
 
     @Autowired
     private StudentRepo repo;
@@ -37,6 +41,7 @@ public class StudentServiceImplement implements StudentService {
         student.setAge(dto.getAge());
         return student;
     }
+
 
     @Override
     public StudentResponseDTO addStudent(StudentRequestDTO dto)
@@ -84,4 +89,22 @@ public class StudentServiceImplement implements StudentService {
         log.warn("Deleting student with id: {}", id);
         repo.deleteById(id);
     }
+
+    @Override
+    public Page<StudentResponseDTO> getStudentsWithPagination(
+            int page,
+            int size,
+            String sortBy,
+            String direction
+    ){
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return repo.findAll(pageable).map(this::mapToResponse);
+    }
+
+
 }
