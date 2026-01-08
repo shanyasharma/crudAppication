@@ -2,11 +2,11 @@ package com.example.crudDemo.controller;
 
 import com.example.crudDemo.dto.StudentRequestDTO;
 import com.example.crudDemo.dto.StudentResponseDTO;
-import com.example.crudDemo.entity.Student;
 import com.example.crudDemo.service.StudentService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -25,9 +25,9 @@ public class StudentController {
     public ResponseEntity<StudentResponseDTO> addStudent(@Valid @RequestBody StudentRequestDTO dto){
         log.info("Request to create student with emai: {}", dto.getEmail());
         StudentResponseDTO response = service.addStudent(dto);
-        log.info("Student created succesfully with id: {}", response.getId());
+        log.info("Student created successfully with id: {}", response.getId());
 
-        return new ResponseEntity<>(service.addStudent(dto), HttpStatus.CREATED);}
+        return new ResponseEntity<>(response, HttpStatus.CREATED);}
 
     @GetMapping
     public List<StudentResponseDTO> getAllStudents(){
@@ -57,5 +57,17 @@ public class StudentController {
         log.warn("Request to delete student with id: {}", id);
         service.deleteStudent(id);
         return "Deleted!";
+    }
+
+    //-------------------Pagination--------------------------------
+    @GetMapping("/page")
+    public Page<StudentResponseDTO> getStudentsWithPagination(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ){
+        log.info("Request to fetch students with pagination: page{}, size{}, sortBy{}, direction{}", page, size, sortBy, direction);
+        return service.getStudentsWithPagination(page, size, sortBy, direction);
     }
 }
